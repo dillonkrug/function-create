@@ -13,14 +13,14 @@ An example is probably better than trying to figure out what that actually means
 
 ```javascript
 
-var Parent = function(){
-	this.field = 'hello'
+var Parent = function(msg){
+	this.field = msg
 }
 
 Parent.staticProperty = 'I\'m a test class!';
 
 var Test = Function.create(Parent, function($super){
-	$super();
+	$super('hello');
 	this.field += ' world.';
 });
 
