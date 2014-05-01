@@ -265,7 +265,7 @@ describe('Function.create with signature', function() {
 
 		protoFn.test = true;
 
-		var res = Function.create(protoFn, targetFn, true);
+		var res = Function.create(protoFn, targetFn);
 
 		expect(res).not.toBe(targetFn);
 		expect(res.test).toBe(true);
@@ -283,7 +283,7 @@ describe('Function.create with signature', function() {
 			desc: {
 				value: 'hello'
 			}
-		}, true);
+		});
 
 		expect(res).not.toBe(targetFn);
 		expect(res.test).toBe(true);

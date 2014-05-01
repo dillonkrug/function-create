@@ -12,11 +12,11 @@ function parseArgs(fn) {
 	// match the function [name ... ] (arg, list)
 	.match(/function(?:[\s\w\$\_]+)?\s*\(([^\)]*)\)/)[1]
 	// remove single line comments
-	.replace(/\/\/.*/g, "")
+	.replace(/\/\/.*/g, '')
 	// remove whitespace
-	.replace(/\s/g, "")
+	.replace(/\s/g, '')
 	// remove multi-line comments
-	.replace(/\/\*.*?\*\//g, "")
+	.replace(/\/\*.*?\*\//g, '')
 	// split list of arguments
 	.split(',');
 }
@@ -28,27 +28,9 @@ if (typeof Object.setPrototypeOf !== 'function') {
 	};
 }
 
-function isEmptyObj(obj) {
-	return (Object.getPrototypeOf(obj) === Object.prototype) && Object.getOwnPropertyNames(obj).length === 0;
-}
+function _eval(str) { return new Function('return ' + str)(); }
 
-
-var fnCall = Function.prototype.call;
-var slice = fnCall.bind(Array.prototype.slice);
-function getWrappedFunction(proto, fn, argList) {
-	return eval(
-		'(function(p,f){\n' + 
-		'	return function ' + fn.name + ' (' + argList.join(', ') + '){\n' +
-		'		var l=arguments.length,i=0,scope=this,\n' +
-		'			args=[function(){ return p.apply(scope, arguments) }];\n' +
-		'		for (;i<l;args.push(arguments[i++]));\n' + 
-		'		return f.apply(scope, args);\n' +
-		'	};'+
-		'});'
-	)(proto, fn);
-}
-
-function FnCreate(proto, fn, props) {
+function FnCreate(proto, fn, props, preserveArity) {
 
 	if (arguments.length === 0) throw new Error('Function.create requires at least one argument');
 
@@ -58,7 +40,7 @@ function FnCreate(proto, fn, props) {
 	var protoIsFn = (typeof proto === 'function'),
 		targetIsFn = (typeof fn === 'function'),
 		argList = targetIsFn && parseArgs(fn),
-		doInherit = argList && argList.shift() === '$super';
+		doInherit = argList && argList.shift() === '$super',
 		outFn = fn;
 
 	if (!protoIsFn && doInherit) throw new TypeError('$super can not be used when Function.create is called with a non-function prototype');
@@ -72,7 +54,25 @@ function FnCreate(proto, fn, props) {
 		// if proto is a function, then we can enable $super goodness
 		if (targetIsFn) {
 			if (doInherit) {
-				outFn = getWrappedFunction(proto, fn, argList);
+				if (preserveArity) {
+					outFn = preserveArity_eval(
+							'(function(p,f){\n' + 
+							'	return function ' + fn.name + ' (' + argList.join(', ') + '){\n' +
+							'		var l=arguments.length,i=0,scope=this,\n' +
+							'			args=[function(){ return p.apply(scope, arguments) }];\n' +
+							'		for (;i<l;args.push(arguments[i++]));\n' + 
+							'		return f.apply(scope, args);\n' +
+							'	};'+
+							'});'
+						)(proto, fn);
+				} else {
+					outFn = function() {
+						var l = arguments.length, i = 0, scope = this,
+							args = [function() { return proto.apply(scope, arguments) }];
+						for (;i<l;args.push(arguments[i++]));
+						return fn.apply(scope, args);
+					};
+				}
 			} else {
 				outFn = fn;
 			}
@@ -88,8 +88,8 @@ function FnCreate(proto, fn, props) {
 
 		outFn = fn;
 
-		var flag = false;
-		for(var i in fnProto) {
+		var flag = false, i;
+		for(i in fnProto) {
 			if (!proto[i]) {
 				if (!flag) {
 					// don't modify the proto object.
@@ -100,7 +100,7 @@ function FnCreate(proto, fn, props) {
 			}
 		}
 
-		for(var i in fnProto) {
+		for(i in fnProto) {
 			if (!proto[i]) proto[i] = fnProto[i];
 		}
 

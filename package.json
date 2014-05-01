@@ -1,6 +1,6 @@
 {
   "name": "function-create",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Function.create(proto, fn, props) — Object.create() for functions",
   "main": "index.js",
   "scripts": {
@@ -13,7 +13,10 @@
   "keywords": [
     "function",
     "create",
-    "prototype"
+    "prototype",
+    "super",
+    "inheritance",
+    "inherit"
   ],
   "author": "Dillon Krug",
   "license": "MIT",

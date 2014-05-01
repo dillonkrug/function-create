@@ -78,7 +78,7 @@ describe('Function.create with $super', function() {
 					value: 'level3B',
 					enumerable: true
 				}
-			})
+			}, true)
 		};
 
 		expect(c.fn.protoA).toBe('hello');
