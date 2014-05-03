@@ -23,5 +23,8 @@
   "bugs": {
     "url": "https://github.com/dillonkrug/function-create/issues"
   },
-  "homepage": "https://github.com/dillonkrug/function-create"
+  "homepage": "https://github.com/dillonkrug/function-create",
+  "dependencies": {
+    "bluebird": "~1.2.4"
+  }
 }
