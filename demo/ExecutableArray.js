@@ -8,7 +8,8 @@ var Promise = require('bluebird'),
 
 // assign array methods to proto function
 // 
-// [NOTE] function.length and array.length don't play nice together, so we can't just use Function.create(Array.prototype, function(){ ... })
+// [NOTE] function.length and array.length don't play nice together, 
+//        so we can't just use Function.create(Array.prototype, function(){ ... })
 
 Object.getOwnPropertyNames(arrProto).forEach(function(fname){
 	// skip length, toString, etc
