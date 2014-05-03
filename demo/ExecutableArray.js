@@ -6,13 +6,13 @@ var Promise = require('bluebird'),
 
 	protoFn = function() {};
 
-// assign array methods to proto function
 // 
 // [NOTE] function.length and array.length don't play nice together, 
 //        so we can't just use Function.create(Array.prototype, function(){ ... })
 
 Object.getOwnPropertyNames(arrProto).forEach(function(fname){
-	// skip length, toString, etc
+	// assign array methods to proto function
+	// skip length, toString, etc.
 	if (typeof protoFn[fname] !== 'undefined') return;
 	var fn = arrProto[fname];
 	protoFn[fname] = function(){
@@ -28,7 +28,9 @@ protoFn.invoke = function(scope, args, opts){
 		case 'pipe':
 			// execute as a synchronous series
 			res = this.__fnlist__[0].apply(scope, args);
-			for (i = 1; i < l; i++) res = this.__fnlist__[i].apply(scope, Array.isArray(res) && spread ? res : [res]);
+			for (i = 1; i < l; i++) {
+				res = this.__fnlist__[i].apply(scope, Array.isArray(res) && spread ? res : [res]);
+			}
 		break;
 		case 'async': 
 			// execute it as an asynchronous series;
