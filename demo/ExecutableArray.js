@@ -53,8 +53,11 @@ function ExecutableArray(opts, fns) {
 	var hooked = Function.create(protoFn, function() {
 		var args = arrProto.slice.call(arguments);
 		return hooked.invoke(this, args, opts);
+	}, {
+		__fnlist__: {
+			value: fns || []
+		}
 	});
-	hooked.__fnlist__ = fns || [];
 	return hooked;
 }
 

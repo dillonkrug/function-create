@@ -6,6 +6,9 @@ Function.create(proto, fn, props) — Object.create() for functions
 
 Just as you might create an object with a given prototype, this module allows you to create a function with a given prototype.
 
+**For an example of what this might be useful for, take a look at the [ExecutableArray Demo](https://github.com/dillonkrug/function-create/blob/master/demo/ExecutableArray.js)**
+
+
 When used with two functions, if the first parameter of the second function is `$super`, it will be automatically filled with a reference to the parent function, bound to the inheriting function's scope.
 
 An example is probably better than trying to figure out what that actually means...
