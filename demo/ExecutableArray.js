@@ -44,6 +44,11 @@ protoFn.invoke = function(scope, args, opts){
 	return res;
 };
 
+
+
+
+// a factory function to create executable arrays.
+
 function ExecutableArray(opts, fns) {
 	var hooked = Function.create(protoFn, function() {
 		var args = arrProto.slice.call(arguments);
@@ -52,6 +57,8 @@ function ExecutableArray(opts, fns) {
 	hooked.__fnlist__ = fns || [];
 	return hooked;
 }
+
+module.exports = ExecutableArray;
 
 
 ///////////////////////////////////////////////////////////
