@@ -93,14 +93,15 @@ var fibbonaci = ExecutableArray({mode: 'pipe', spread: true}, [
 ]);
 
 fibbonaci.unshift(fibbonaciStart);
-fibbonaci.splice(4, 0, _log('I was spliced into position 4'));
+fibbonaci.splice(5, 0, _log('I was spliced into position 4'));
 fibbonaci.splice(8, 0, _log('I was spliced into position 8'));
 fibbonaci.push(_log('I\'m the final _log() before the finishing function'));
 fibbonaci.push(fibbonaciFinish);
 
 
 fibbonaci();
-	// logs: 3  (spliced-in _log function #1)
-	// logs: 13 (spliced-in _log function #2)
-	// logs: 55 (spliced-in _log function)
+	// logs: 2	I'm in the original fn list
+	// logs: 3	I was spliced into position 4
+	// logs: 8	I was spliced into position 8
+	// logs: 21	I'm the final _log() before the finishing function
 	// -> output: 55
